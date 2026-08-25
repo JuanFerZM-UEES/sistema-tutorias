@@ -1,0 +1,90 @@
+classDiagram
+    class Usuario {
+        <<abstract>>
+        -String id
+        -String nombre
+        -String email
+        +getId() String
+        +getNombre() String
+        +getEmail() String
+    }
+
+    class Estudiante {
+        -String carrera
+        +getCarrera() String
+    }
+
+    class Docente {
+        -List~HorarioDisponible~ horarios
+        +publicarHorario(id, inicio, fin) HorarioDisponible
+        +getHorariosDisponibles() List~HorarioDisponible~
+    }
+
+    class HorarioDisponible {
+        -String id
+        -LocalDateTime inicio
+        -LocalDateTime fin
+        -boolean disponible
+        +estaDisponible() boolean
+        +marcarComoOcupado()
+        +marcarComoDisponible()
+    }
+
+    class EstadoReserva {
+        <<enumeration>>
+        PENDIENTE
+        CONFIRMADA
+        CANCELADA
+        REPROGRAMADA
+        COMPLETADA
+    }
+
+    class Reserva {
+        -String id
+        -EstadoReserva estado
+        -LocalDateTime fechaCreacion
+        +confirmar()
+        +cancelar()
+        +reprogramar(nuevoHorario)
+        +completar()
+    }
+
+    class Notificador {
+        <<interface>>
+        +notificar(destinatario, asunto, mensaje)
+    }
+
+    class NotificadorEmail
+    class NotificadorConsola
+
+    class RepositorioReservas {
+        <<interface>>
+        +guardar(reserva)
+        +buscarPorId(id) Optional~Reserva~
+        +listarPorEstudiante(id) List~Reserva~
+        +actualizar(reserva)
+    }
+
+    class RepositorioReservasEnMemoria
+
+    class ServicioReservas {
+        -RepositorioReservas repositorio
+        -Notificador notificador
+        +solicitarReserva(id, estudiante, horario) Reserva
+        +confirmarReserva(id) Reserva
+        +cancelarReserva(id, motivo) Reserva
+        +reprogramarReserva(id, nuevoHorario) Reserva
+    }
+
+    Usuario <|-- Estudiante
+    Usuario <|-- Docente
+    Docente "1" --> "0..*" HorarioDisponible : publica
+    Estudiante "1" --> "0..*" Reserva : solicita
+    HorarioDisponible "1" --> "0..1" Reserva : asignado a
+    Reserva --> "1" EstadoReserva
+    Notificador <|.. NotificadorEmail
+    Notificador <|.. NotificadorConsola
+    RepositorioReservas <|.. RepositorioReservasEnMemoria
+    ServicioReservas ..> RepositorioReservas : usa
+    ServicioReservas ..> Notificador : usa
+    ServicioReservas ..> Reserva : crea / gestiona
