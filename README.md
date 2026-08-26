@@ -55,5 +55,6 @@ mvn exec:java           # ejecuta la demostración (clase App)
 ```
 
 ## Declaración de uso de inteligencia artificial
-
-Utilicé Claude para optimizar la escritura y verificar los errores de programación en java.
+Durante el desarrollo de esta actividad utilicé como inteligencia artificial Claude.
+En caso de uso, las utilicé para: revisión del código JAVA y el diagrama UML, y reorganización de las oraciones del documento a entregar.
+Verifiqué y adapté las respuestas obtenidas (el proyecto compila y las pruebas unitarias pasan), y puedo explicar y justificar el código y las decisiones de diseño presentadas.
