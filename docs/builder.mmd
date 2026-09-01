@@ -1,0 +1,50 @@
+classDiagram
+    class Estudiante
+    class HorarioDisponible
+    class ModalidadTutoria {
+        <<enumeration>>
+        PRESENCIAL
+        VIRTUAL
+    }
+
+    class Reserva {
+        -String id
+        -Estudiante estudiante
+        -HorarioDisponible horario
+        -EstadoReserva estado
+        -LocalDateTime fechaCreacion
+        -ModalidadTutoria modalidad
+        -String motivo
+        -String observaciones
+        -boolean recordatorio
+        ~Reserva(id, estudiante, horario, fechaCreacion, modalidad, motivo, observaciones, recordatorio)
+        +getModalidad() ModalidadTutoria
+        +getMotivo() String
+        +getObservaciones() String
+        +isRecordatorio() boolean
+    }
+
+    class ReservaBuilder {
+        -Estudiante estudiante
+        -HorarioDisponible horario
+        -String id
+        -LocalDateTime fechaCreacion
+        -ModalidadTutoria modalidad = PRESENCIAL
+        -String motivo = ""
+        -String observaciones = ""
+        -boolean recordatorio = true
+        +estudiante(Estudiante) ReservaBuilder
+        +horario(HorarioDisponible) ReservaBuilder
+        +modalidad(ModalidadTutoria) ReservaBuilder
+        +motivo(String) ReservaBuilder
+        +observaciones(String) ReservaBuilder
+        +recordatorio(boolean) ReservaBuilder
+        +build() Reserva
+    }
+
+    ReservaBuilder ..> Reserva : construye (build)
+    Reserva "1" --> "1" Estudiante
+    Reserva "1" --> "1" HorarioDisponible
+    Reserva "1" --> "1" ModalidadTutoria
+
+    note for ReservaBuilder "estudiante y horario son obligatorios:<br/>build() lanza IllegalStateException<br/>si falta alguno. El resto tiene<br/>valores por defecto (fluent API)."

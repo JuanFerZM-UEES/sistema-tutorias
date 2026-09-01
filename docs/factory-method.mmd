@@ -1,0 +1,48 @@
+classDiagram
+    class Notificador {
+        <<interface>>
+        +notificar(destinatario, asunto, mensaje)
+    }
+
+    class NotificadorEmail
+    class NotificadorConsola
+    class NotificadorSMS
+    class NotificadorPush
+
+    class NotificadorCreator {
+        <<abstract>>
+        #crear() Notificador
+        +notificar(destinatario, asunto, mensaje)
+    }
+
+    class EmailCreator {
+        #crear() Notificador
+    }
+    class ConsolaCreator {
+        #crear() Notificador
+    }
+    class SMSCreator {
+        #crear() Notificador
+    }
+    class PushCreator {
+        #crear() Notificador
+    }
+
+    Notificador <|.. NotificadorEmail
+    Notificador <|.. NotificadorConsola
+    Notificador <|.. NotificadorSMS
+    Notificador <|.. NotificadorPush
+
+    NotificadorCreator <|-- EmailCreator
+    NotificadorCreator <|-- ConsolaCreator
+    NotificadorCreator <|-- SMSCreator
+    NotificadorCreator <|-- PushCreator
+
+    EmailCreator ..> NotificadorEmail : crea
+    ConsolaCreator ..> NotificadorConsola : crea
+    SMSCreator ..> NotificadorSMS : crea
+    PushCreator ..> NotificadorPush : crea
+
+    NotificadorCreator ..> Notificador : usa (metodo plantilla notificar)
+
+    note for PushCreator "Variante adicional agregada<br/>sin modificar las demas clases<br/>(evidencia de extensibilidad / OCP)"
